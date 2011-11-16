@@ -49,7 +49,7 @@ if options[:execute]
       ParallelTests.execute_command(options[:execute], i, options)
     end
   else
-    Parallel.map(runs, :in_processes => num_processes) do |i|
+    Parallel.map(runs, :in_threads => num_processes) do |i|
       ParallelTests.execute_command(options[:execute], i, options)
     end
   end.flatten
@@ -78,7 +78,7 @@ else
   num_tests = groups.inject(0){|sum,item| sum + item.size }
   puts "#{num_processes} processes for #{num_tests} #{name}s, ~ #{num_tests / groups.size} #{name}s per process"
 
-  test_results = Parallel.map(groups, :in_processes => num_processes) do |group|
+  test_results = Parallel.map(groups, :in_threads => num_processes) do |group|
     klass.run_tests(group, groups.index(group), options)
   end
 
